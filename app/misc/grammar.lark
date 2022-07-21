@@ -1,0 +1,6 @@
+expr : term (PLUS|MINUS term)*
+term : factor (FDIV|MUL factor)*
+factor : NUMBER
+       | PLUS factor
+       | MINUS factor
+       | LPAREN expr RPAREN 

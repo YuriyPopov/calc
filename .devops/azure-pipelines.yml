@@ -1,0 +1,35 @@
+trigger:
+branches:
+  include:
+  - master
+paths:
+  include:
+  - app/*
+  - test/*
+  
+resources:
+repositories:
+- repository: CITemplates
+  type: git
+  name: Abakion Apps/CITemplates
+  ref: master
+
+name: $(Build.BuildId)
+
+pool: default
+
+variables:
+- group: Secrets
+- template: CI/Templates/var.yml@CITemplates
+
+jobs:
+- job: StartDockerContainer
+  steps:
+  - checkout: self
+    clean: true
+  
+  - template: CI/Templates/PrepareBuildEnvironmentPTE.yml@CITemplates
+    parameters:
+      country: 'dk'
+      useinsider: false
+      minor: false

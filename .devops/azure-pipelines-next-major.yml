@@ -1,0 +1,37 @@
+trigger: none
+
+schedules:
+- cron: "0 6 * * 6"
+    displayName: Nightly build
+    branches:
+    include:
+        - master
+    always: true
+    
+resources:
+    repositories:
+    - repository: CITemplates
+    type: git
+    name: Abakion Apps/CITemplates
+    ref: master
+
+name: $(Build.BuildId)
+
+pool: $(pool_build_Nightly)
+
+variables:
+- group: Secrets
+- group: PipelineVariables
+- template: CI/Templates/var.yml@CITemplates
+
+jobs:
+    - job: StartDockerContainer
+    steps:
+    - checkout: self
+        clean: true
+    - template: CI/Templates/PrepareBuildEnvironmentPTE.yml@CITemplates
+        parameters:
+        country: 'w1'
+        useinsider: true
+        minor: false
+        major: true
